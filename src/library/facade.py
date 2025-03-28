@@ -1,5 +1,4 @@
-from models.abstract_model import Model
-from factory import FactoryAI
+from src.library.factory import FactoryAI
 
 class AImodel:
     def __init__(self, modelType:str):

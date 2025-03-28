@@ -1,14 +1,17 @@
 from abc import ABC, abstractmethod
 from numpy import ndarray
+from sklearn.base import BaseEstimator,TransformerMixin
+import pandas as pd 
+
 
 class Model(ABC):
 
     @abstractmethod
-    def train_model(self, data:ndarray, trainParams:dict) -> ndarray:
+    def train_model(self, dataPath:str, trainParams:dict) -> ndarray:
         """
         Entrena el modelo con los parámetros dados.
 
-        :param data: Datos de entrenamiento en formato ndarray.
+        :param dataPath: Ubicación de los datos.
         :param trainParams: Diccionario con parámetros adicionales de entrenamiento.
         :return: Matriz de confusión tipo ndarray de Numpy.
         """
@@ -41,3 +44,23 @@ class Model(ABC):
         :return: Devuelve el resultado del modelo.
         """
         
+
+
+class ColumnExtractor(BaseEstimator, TransformerMixin):
+    def __init__(self,columns,output_type='dataframe'):
+        self.columns=columns
+        self.output_type=output_type
+    
+    def transform(self,X,**transform_params):
+        if isinstance(X,list):
+            X=pd.DataFrame.from_dict(X)
+        if self.output_type=='matrix':
+            return X[self.columns].values
+        
+        elif self.output_type=='dataframe':
+            return X[self.columns]
+        
+        raise Exception('output_type tiene que ser matrix o dataframe')
+    
+    def fit(self,X,y=None,**fit_params):
+        return self

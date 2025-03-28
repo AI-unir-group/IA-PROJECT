@@ -1,4 +1,4 @@
-from abstract_model import Model
+from src.models.abstract_model import Model
 
 
 class DecisionTree(Model):

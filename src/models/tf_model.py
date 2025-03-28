@@ -1,9 +1,8 @@
-from abstract_model import Model 
+from src.models.abstract_model import Model 
 
 
 
 class NeuronalNetwork(Model):
-    model: any
     
     def __init__(self):
         pass

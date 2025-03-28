@@ -1,7 +1,7 @@
-from models.abstract_model import Model
-from models.decision_tree import DecisionTree
-from models.lineal_regresion import LinealRegression
-from models.tf_model import NeuronalNetwork
+from src.models.abstract_model import Model
+from src.models.decision_tree import DecisionTree
+from src.models.lineal_regresion import LinealRegression
+from src.models.tf_model import NeuronalNetwork
 
 class FactoryAI():
     @staticmethod
