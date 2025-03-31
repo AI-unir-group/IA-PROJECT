@@ -21,9 +21,16 @@ def split_dataset(path:str) -> None:
 
 
 if __name__ == "__main__":
-   split_dataset("./dataset/NFLX_dataset.csv")
-   obj = AImodel("")
-   obj.train("", {})
-   obj.predic({})
-   obj.save("") 
-   obj.load("")
+   #split_dataset("./dataset/NFLX_dataset.csv")
+   lineal = AImodel("sgd")
+   trainDic = {
+      "metric": "rmse",
+      "cv": 10,
+      "jobs": 5,
+      "train_score": True,
+      "epoch": 1000
+   }
+   lineal.train("./dataset/train/NFLX_train.csv", trainDic)
+   #lineal.predic("./dataset/test/NFLX_test.csv")
+   #lineal.save("SGD") 
+   #lineal.load("")

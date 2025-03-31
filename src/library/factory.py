@@ -1,6 +1,6 @@
 from src.models.abstract_model import Model
 from src.models.decision_tree import DecisionTree
-from src.models.lineal_regresion import LinealRegression
+from src.models.sgd import SGD
 from src.models.tf_model import NeuronalNetwork
 
 class FactoryAI():
@@ -9,8 +9,8 @@ class FactoryAI():
        match (model_type):
         case "decision_tree":
             return DecisionTree()
-        case "lineal_regresion":
-            return LinealRegression()
+        case "sgd":
+            return SGD()
         case "neuronal_network":
             return NeuronalNetwork()
         case _:

@@ -4,14 +4,14 @@ class AImodel:
     def __init__(self, modelType:str):
         self.__modelAI = FactoryAI.create_model(modelType)
     
-    def train(self, dataset:str,trainParams:dict):
+    def train(self, dataset:str, trainParams:dict):
         """
         Entrena el modelo seleccionado
 
         :param dataset: Ruta donde cargar el dataset con extensión csv
         """
         # Mostrar matriz de confución con matplotlib
-        self.__modelAI.train_model()
+        self.__modelAI.train_model(dataset, trainParams)
 
     def save(self, path:str):
        """
@@ -29,10 +29,10 @@ class AImodel:
         """
         print(self.__modelAI.load_model(path))
     
-    def predic(self, data: any):
+    def predic(self, path:str):
         """
         Devuelve el resultado del modelo entrenado
 
-        :param data: Datos a pasar al modelo.
+        :param path: Ruta al dataset
         """
-        print(self.__modelAI.test_model(data))
+        print(self.__modelAI.test_model(path))
