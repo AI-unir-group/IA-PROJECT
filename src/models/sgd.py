@@ -1,7 +1,7 @@
 from src.models.abstract_model import Model,ColumnExtractor
 import pandas as pd 
 import numpy as np 
-import matplotlib as plt 
+import matplotlib.pyplot as plt 
 import matplotlib
 from sklearn.pipeline import Pipeline,FeatureUnion
 from sklearn.preprocessing import MinMaxScaler
@@ -14,6 +14,7 @@ from sklearn.exceptions import DataConversionWarning
 import json5 as js
 import joblib
 import os
+
 
 warnings.filterwarnings(action='ignore',category=DataConversionWarning)
 np.random.seed(42)
@@ -30,12 +31,10 @@ class SGD(Model):
         os.makedirs(self.path,exist_ok=True)
 
     def train_model(self, datapath:str, trainParams:dict):
-        
         try:
            self.df = pd.read_csv(datapath, parse_dates=True, dayfirst=False, index_col="Date")
            self.df.dropna(inplace=True)
            self.df[self.df.columns] = self.df[self.df.columns].replace(",", "", regex=True).astype(float)
-           print(self.df.columns)
            col_num = self.df.drop(columns=[self.objetive], axis=1, errors="ignore").select_dtypes(include=[np.number]).columns
            pipeline_extractor = Pipeline(
                [
@@ -91,27 +90,39 @@ class SGD(Model):
             ]
         )
 
-        result = self.evaluate_model(cv, jobs, train_score)
-
-        print("[+] Resultados: {}".format(result))
-
+        self.evaluate_model(cv, jobs, train_score)
         self.show_result(self.__model.predict(self.df))
 
     
     def evaluate_model(self, cv, jobs, train_score) -> any: 
+        print("[+] Training...")
         try:
-          result = cross_validate(self.__model, self.df, self.df[self.objetive], 
+            result = cross_validate(self.__model, self.df, self.df[self.objetive], 
                                   scoring=self.metric, cv=cv, n_jobs=jobs, return_train_score=train_score, error_score="raise")
+            prod_fit_time = 0
+            for i in result["fit_time"] :
+                prod_fit_time += i
+            prod_train_score = 0 
+            for i in result["train_score"]:
+                prod_train_score += i 
+            prod_test_score = 0 
+            for i in result["test_score"]:
+                prod_test_score += i
+            print("fit_time:{} train_score:{} test_score:{}".
+                  format(prod_fit_time / len(result["fit_time"]), 
+                         prod_train_score/ len(result["train_score"]),
+                         prod_test_score / len(result["test_score"])
+            ))
+
+            self.__model.fit(self.df, self.df[self.objetive])
         except Exception as e:
-            raise ValueError("[-] {}".format(e))
-        return result
-
-
-
+            raise ValueError(e)
+    
+      
     def show_result(self, y_pred) :
         y_real = self.df[self.objetive]
 
-        fig, ax = plt.suplots()
+        fig, ax = plt.subplots()
         ax.scatter(y_real, y_pred, color="blue", alpha=0.6, label="Predicciones")
         min_val = min(min(y_real), min(y_pred))
         max_val = max(max(y_real), max(y_pred))
@@ -125,7 +136,7 @@ class SGD(Model):
         plt.savefig(self.path + "/Matriz-SGD.png", dpi=300, bbox_inches="tight")
         plt.show()
 
-    def save_model(self, modelName:str):
+    def save_model(self, modelName:str) -> str:
         try:
             with open(self.path + "/NFLX_columns.json","w") as fname:
                 columns = self.df.columns.to_list()
@@ -139,6 +150,8 @@ class SGD(Model):
             joblib.dump(self.__model, self.path + "/" + modelName + ".pkl")
         except Exception as e: 
             raise ValueError("[-] Error: {}".format(e))
+
+        return "[+] Modelo guardado {}".format(self.path)
         
     
     def load_model(self, modelName:str):
@@ -146,11 +159,13 @@ class SGD(Model):
             self.__model = joblib.load(modelName)
         except Exception as e: 
             raise ValueError("[-] {}".format(e))
+        return "[+] Modelo cargado {}".format(modelName)
     
     def test_model(self, path:str):
         try:
             data = pd.read_csv(path, parse_dates=True, dayfirst=False, index_col="Date")
             data.dropna(inplace=True)
+            data[data.columns] = data[data.columns].replace(",", "", regex=True).astype(float)
             if "Close" in data.columns:
                 data = data.drop("Close", axis=1)
         except Exception as e:
