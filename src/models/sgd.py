@@ -30,7 +30,7 @@ class SGD(Model):
         self.metric = ""
         os.makedirs(self.path,exist_ok=True)
 
-    def train_model(self, datapath:str, trainParams:dict):
+    def train(self, datapath:str, trainParams:dict):
         try:
            df = pd.read_csv(datapath, parse_dates=True, dayfirst=False, index_col="Date")
            df.dropna(inplace=True)
@@ -142,7 +142,7 @@ class SGD(Model):
         
         plt.savefig(self.path + "/Matriz-SGD.png", dpi=300, bbox_inches="tight")
 
-    def save_model(self, modelName:str) -> str:
+    def save(self, modelName:str) -> str:
         try:
             joblib.dump(self.__model, self.path + "/" + modelName + ".pkl")
         except Exception as e: 
@@ -151,14 +151,14 @@ class SGD(Model):
         return "[+] Modelo guardado {}".format(self.path)
         
     
-    def load_model(self, modelName:str):
+    def load(self, modelName:str):
         try:
             self.__model = joblib.load(modelName)
         except Exception as e: 
             raise ValueError("[-] {}".format(e))
         return "[+] Modelo cargado {}".format(modelName)
     
-    def test_model(self, path:str):
+    def predic(self, path:str):
         try:
             data = pd.read_csv(path, parse_dates=True, dayfirst=False, index_col="Date")
             data.dropna(inplace=True)

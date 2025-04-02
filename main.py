@@ -37,10 +37,10 @@ if __name__ == "__main__":
       "shuffle": True
    }
 
-   model.train("./dataset/train/NFLX_train.csv", trainDic)
-   model.predic("./dataset/test/NFLX_test.csv")
-   model.save("SGD") 
+   model.train_model("./dataset/train/NFLX_train.csv", trainDic)
+   model.test_model("./dataset/test/NFLX_test.csv")
+   model.save_model("SGD") 
 
   #redy = AImodel("sgd")
-  #redy.load("./SGD/SGD.pkl")
-  #redy.predic("./dataset/test/NFLX_test.csv")
+  #redy.load_model("./SGD/SGD.pkl")
+  #redy.test_model("./dataset/test/NFLX_test.csv")

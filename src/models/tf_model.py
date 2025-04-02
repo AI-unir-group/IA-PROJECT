@@ -7,14 +7,14 @@ class NeuronalNetwork(Model):
     def __init__(self):
         pass
 
-    def train_model(self, data, trainParams):
+    def train(self, data, trainParams):
         pass
     
-    def save_model(self, modelName):
+    def save(self, modelName):
         pass
     
-    def load_model(self, modelName):
+    def load(self, modelName):
         pass
     
-    def test_model(self, data):
+    def predic(self, data):
         pass

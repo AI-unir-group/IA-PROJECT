@@ -7,7 +7,7 @@ import pandas as pd
 class Model(ABC):
 
     @abstractmethod
-    def train_model(self, dataPath:str, trainParams:dict) -> ndarray:
+    def train(self, dataPath:str, trainParams:dict) -> ndarray:
         """
         Entrena el modelo con los parámetros dados.
 
@@ -17,7 +17,7 @@ class Model(ABC):
         """
 
     @abstractmethod
-    def save_model(self, modelName:str) -> str:
+    def save(self, modelName:str) -> str:
          """
         Guarda el modelo con el nombre especificado.
 
@@ -27,7 +27,7 @@ class Model(ABC):
     
 
     @abstractmethod
-    def load_model(self,modelName:str) -> str:
+    def load(self,modelName:str) -> str:
         """
         Carga el modelo desde un archivo.
 
@@ -36,7 +36,7 @@ class Model(ABC):
         """
     
     @abstractmethod
-    def test_model(self,data) -> any:
+    def predic(self,data) -> any:
         """
         Prueba el modelo con nuevos datos.
         
