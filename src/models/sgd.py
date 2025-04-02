@@ -7,8 +7,8 @@ from sklearn.pipeline import Pipeline,FeatureUnion
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import SGDRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, make_scorer
-from sklearn.model_selection import cross_validate
+from sklearn.metrics import mean_absolute_error, make_scorer, root_mean_squared_error
+from sklearn.model_selection import cross_validate, train_test_split
 import warnings
 from sklearn.exceptions import DataConversionWarning
 import json5 as js
@@ -32,10 +32,10 @@ class SGD(Model):
 
     def train_model(self, datapath:str, trainParams:dict):
         try:
-           self.df = pd.read_csv(datapath, parse_dates=True, dayfirst=False, index_col="Date")
-           self.df.dropna(inplace=True)
-           self.df[self.df.columns] = self.df[self.df.columns].replace(",", "", regex=True).astype(float)
-           col_num = self.df.drop(columns=[self.objetive], axis=1, errors="ignore").select_dtypes(include=[np.number]).columns
+           df = pd.read_csv(datapath, parse_dates=True, dayfirst=False, index_col="Date")
+           df.dropna(inplace=True)
+           df[df.columns] = df[df.columns].replace(",", "", regex=True).astype(float)
+           col_num = df.drop(columns=[self.objetive], axis=1, errors="ignore").select_dtypes(include=[np.number]).columns
            pipeline_extractor = Pipeline(
                [
                 ("selecter",ColumnExtractor(columns=col_num)),
@@ -46,10 +46,12 @@ class SGD(Model):
         except: 
             raise ValueError("[-] Error loading dataset")
         
+        self.train_df, self.test_df = train_test_split(df,test_size=0.30, random_state=50)
+
         pipeline_processed = FeatureUnion([("pipeline_extractor", pipeline_extractor)])
         
         if trainParams.get("metric","none") == "rmse":
-            self.metric = make_scorer(mean_squared_error, greater_is_better=False)
+            self.metric = make_scorer(root_mean_squared_error, greater_is_better=False)
         else:
             self.metric = make_scorer(mean_absolute_error, greater_is_better=False)
         
@@ -69,6 +71,8 @@ class SGD(Model):
         penalty = trainParams.get("penalty", "l2")
         eta = trainParams.get("eta", 0.01)
         epsilon = trainParams.get("epsilon", 0.1)
+        verbose= trainParams.get("verbose", 0)
+        n_iter_stop = trainParams.get("n_iter_stop", 5)
 
         self.__model = Pipeline(
             [
@@ -85,19 +89,21 @@ class SGD(Model):
                     early_stopping=early_stopping,
                     random_state=random_state,
                     eta0=eta,
-                    epsilon=epsilon
+                    epsilon=epsilon,
+                    verbose=verbose,
+                    n_iter_no_change=n_iter_stop
                 ))
             ]
         )
 
         self.evaluate_model(cv, jobs, train_score)
-        self.show_result(self.__model.predict(self.df))
+        self.show_result(self.__model.predict(self.test_df))
 
     
     def evaluate_model(self, cv, jobs, train_score) -> any: 
         print("[+] Training...")
         try:
-            result = cross_validate(self.__model, self.df, self.df[self.objetive], 
+            result = cross_validate(self.__model, self.train_df, self.train_df[self.objetive], 
                                   scoring=self.metric, cv=cv, n_jobs=jobs, return_train_score=train_score, error_score="raise")
             prod_fit_time = 0
             for i in result["fit_time"] :
@@ -108,19 +114,20 @@ class SGD(Model):
             prod_test_score = 0 
             for i in result["test_score"]:
                 prod_test_score += i
-            print("fit_time:{} train_score:{} test_score:{}".
+
+            print("[+] Average results:\n\t fit_time: {} train_score: {} test_score: {}".
                   format(prod_fit_time / len(result["fit_time"]), 
-                         prod_train_score/ len(result["train_score"]),
-                         prod_test_score / len(result["test_score"])
+                         (prod_train_score / len(result["train_score"])) * -1,
+                         (prod_test_score / len(result["test_score"])) * -1
             ))
 
-            self.__model.fit(self.df, self.df[self.objetive])
+            self.__model.fit(self.train_df, self.train_df[self.objetive])
         except Exception as e:
             raise ValueError(e)
     
       
     def show_result(self, y_pred) :
-        y_real = self.df[self.objetive]
+        y_real = self.test_df[self.objetive]
 
         fig, ax = plt.subplots()
         ax.scatter(y_real, y_pred, color="blue", alpha=0.6, label="Predicciones")
@@ -134,19 +141,9 @@ class SGD(Model):
         ax.legend()
         
         plt.savefig(self.path + "/Matriz-SGD.png", dpi=300, bbox_inches="tight")
-        plt.show()
 
     def save_model(self, modelName:str) -> str:
         try:
-            with open(self.path + "/NFLX_columns.json","w") as fname:
-                columns = self.df.columns.to_list()
-                js.dump(columns, fname)
-                fname.close()
-            
-            dtypes = self.df.dtypes
-            dtypes = {col:self.df[col].dtypes for col in self.df.columns}
-
-            joblib.dump(dtypes, self.path + "/NFLX_dtypes.pkl")
             joblib.dump(self.__model, self.path + "/" + modelName + ".pkl")
         except Exception as e: 
             raise ValueError("[-] Error: {}".format(e))

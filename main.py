@@ -8,15 +8,12 @@ def split_dataset(path:str) -> None:
   array = path.split("/")[:2]
   path = "/".join(array)
   print(path)
-  train_df, temp_df = train_test_split(df,test_size=0.30, random_state=50)
-  val_df, test_df = train_test_split(temp_df, test_size=0.5, random_state=50)
+  train_df, test_df = train_test_split(df,test_size=0.20, random_state=50)
 
   train_path = path + "/train/NFLX_train.csv"
-  val_path = path + "/val/NFLX_val.csv"
   test_path = path + "/test/NFLX_test.csv"
 
   train_df.to_csv(train_path, index=False)
-  val_df.to_csv(val_path, index=False)
   test_df.to_csv(test_path, index=False)
 
 
@@ -26,13 +23,24 @@ if __name__ == "__main__":
    model = AImodel("sgd")
    trainDic = {
       "metric": "rmse",
-      "cv": 5,
-      "jobs": 1,
+      "cv": 15,
+      "jobs": -1,
       "train_score": True,
-      "epoch": 10000
+      "epoch": 1000,
+      "epsilon": 0.5,
+      "penalty": "l2",
+      "verbose": 1,
+      "alpha": 0.0002,
+      "n_iter_stop": 10,
+      "random_state": 50,
+      "early_stopping": True,
+      "shuffle": True
    }
 
    model.train("./dataset/train/NFLX_train.csv", trainDic)
-   #model.predic("./dataset/test/NFLX_test.csv")
+   model.predic("./dataset/test/NFLX_test.csv")
    model.save("SGD") 
-   #lineal.load("")
+
+  #redy = AImodel("sgd")
+  #redy.load("./SGD/SGD.pkl")
+  #redy.predic("./dataset/test/NFLX_test.csv")
