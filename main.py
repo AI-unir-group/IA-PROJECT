@@ -20,13 +20,13 @@ def split_dataset(path:str) -> None:
 
 if __name__ == "__main__":
    #split_dataset("./dataset/NFLX_dataset.csv")
-   model = AImodel("sgd")
+   model = AImodel("tf")
    trainDic = {
       "metric": "rmse",
       "cv": 15,
       "jobs": -1,
-      "train_score": True,
-      "epoch": 1000,
+      "epoch": 10,
+      "batch_size": 5,
       "epsilon": 0.5,
       "penalty": "l2",
       "verbose": 1,
@@ -39,8 +39,8 @@ if __name__ == "__main__":
 
    model.train_model("./dataset/train/NFLX_train.csv", trainDic)
    model.test_model("./dataset/test/NFLX_test.csv")
-   model.save_model("SGD") 
+   model.save_model("TF") 
 
-  #redy = AImodel("sgd")
-  #redy.load_model("./SGD/SGD.pkl")
-  #redy.test_model("./dataset/test/NFLX_test.csv")
+   redy = AImodel("tf")
+   redy.load_model("./TF/TF.keras")
+   redy.test_model("./dataset/test/NFLX_test.csv")

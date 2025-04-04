@@ -11,7 +11,6 @@ from sklearn.metrics import mean_absolute_error, make_scorer, root_mean_squared_
 from sklearn.model_selection import cross_validate, train_test_split
 import warnings
 from sklearn.exceptions import DataConversionWarning
-import json5 as js
 import joblib
 import os
 
@@ -58,7 +57,6 @@ class SGD(Model):
         
         cv = trainParams.get("cv", 15)
         jobs = trainParams.get("jobs", -1)
-        train_score = trainParams.get("train_score",False)
         max_epoch = trainParams.get("epoch", 500)
         tol = trainParams.get("tol", 1e-3)
         loss = trainParams.get("loss", "squared_error")
@@ -96,15 +94,15 @@ class SGD(Model):
             ]
         )
 
-        self.evaluate_model(cv, jobs, train_score)
+        self.evaluate_model(cv, jobs)
         self.show_result(self.__model.predict(self.test_df))
 
     
-    def evaluate_model(self, cv, jobs, train_score) -> any: 
+    def evaluate_model(self, cv, jobs) -> any: 
         print("[+] Training...")
         try:
             result = cross_validate(self.__model, self.train_df, self.train_df[self.objetive], 
-                                  scoring=self.metric, cv=cv, n_jobs=jobs, return_train_score=train_score, error_score="raise")
+                                  scoring=self.metric, cv=cv, n_jobs=jobs, return_train_score=True, error_score="raise")
             prod_fit_time = 0
             for i in result["fit_time"] :
                 prod_fit_time += i
