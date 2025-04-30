@@ -35,12 +35,77 @@ La intención es facilitar una interfaz amigable al usuario, sin la necesidad de
     pip install -r requirements.txt
     ```
 
-3. Ejecuta el proyecto:  
+3. Activa el ambiente:
 
     ```bash
-    python main.py
+    env/Scripts/Activate
+
+    ```
+
+4. Ejecuta el proyecto:  
+
+    ```bash
+    python App.py
     
     ```
+
+## Variables de entrenamiento para los modelos, estas pueden ser opcionales
+
+```bash 
+Modelo tensorflow
+
+trainDic = {
+    "metric": "rmse",
+    "cv": 15,
+    "jobs": -1,
+    "epoch": 10,
+    "batch_size": 5,
+    "epsilon": 0.5,
+    "penalty": "l2",
+    "verbose": 1,
+    "alpha": 0.0002,
+    "n_iter_stop": 10,
+    "random_state": 50,
+    "early_stopping": True,
+    "shuffle": True
+}
+
+Modelo sgd
+
+trainDic = {
+    "jobs": -1,
+    "epoch": 500,
+    "tol": 1e-3,
+    "loss": "squared_error",
+    "alpha": 0.0001,
+    "l1": 0.15,
+    "shuffle": True,
+    "lr": "invscaling",
+
+}
+
+Modelo tree
+
+trainDic = {
+    "jobs": -1,
+    "epoch": 500,
+    "tol": 1e-3,
+    "loss": "squared_error",
+    "alpha": 0.0001,
+    "l1": 0.15,
+    "shuffle": True,
+    "lr": "invscaling",
+
+}
+
+```
+
+## Dataset
+
+El dataset es cargado, procesado y dividio en partes, para entrenamiento y para test.
+Otra parte se guarda solo para la prueba de estimación.
+El dataset debe cumplir estricatemte con las columnas y tipos de datos del modelo.
+Se propone como ejemplo el dataset que se encuentra en el directorio dataset
 
 ## Contribuciones
 

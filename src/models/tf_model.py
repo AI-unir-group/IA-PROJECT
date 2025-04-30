@@ -55,7 +55,6 @@ class TF(Model):
         optimizer = trainParams.get("optimizer", "adam")
         epoch = trainParams.get("epoch", 100)
         batch_size = trainParams.get("batch_size", 10)
-        verbose = trainParams.get("verbose", 1)
         jobs = trainParams.get("jobs", -1)
         cv = trainParams.get("cv", 15)
 
