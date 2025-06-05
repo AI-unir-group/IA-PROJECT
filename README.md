@@ -16,7 +16,7 @@ La intención es facilitar una interfaz amigable al usuario, sin la necesidad de
 
 ## Requisitos
 
-- Python 3.8 o superior  
+- Python 3.11.9
 - Bibliotecas necesarias (ver `requirements.txt`)  
 - GPU compatible (opcional para entrenamiento acelerado)  
 
@@ -29,20 +29,26 @@ La intención es facilitar una interfaz amigable al usuario, sin la necesidad de
     cd ia-project
     ```
 
-2. Instala las dependencias:  
+2. Crear ambient con python:
+
+    ```bash 
+    python -m venv env 
+    ```
+
+3. Instala las dependencias:  
 
     ```bash
     pip install -r requirements.txt
     ```
 
-3. Activa el ambiente:
+4. Activa el ambiente:
 
     ```bash
     env/Scripts/Activate
 
     ```
 
-4. Ejecuta el proyecto:  
+5. Ejecuta el proyecto:  
 
     ```bash
     python App.py
@@ -52,51 +58,51 @@ La intención es facilitar una interfaz amigable al usuario, sin la necesidad de
 ## Variables de entrenamiento para los modelos, estas pueden ser opcionales
 
 ```bash 
-Modelo tensorflow
+    Modelo tensorflow
 
-trainDic = {
-    "metric": "rmse",
-    "cv": 15,
-    "jobs": -1,
-    "epoch": 10,
-    "batch_size": 5,
-    "epsilon": 0.5,
-    "penalty": "l2",
-    "verbose": 1,
-    "alpha": 0.0002,
-    "n_iter_stop": 10,
-    "random_state": 50,
-    "early_stopping": True,
-    "shuffle": True
-}
+    trainDic = {
+        "metric": "rmse",
+        "cv": 15,
+        "jobs": -1,
+        "epoch": 10,
+        "batch_size": 5,
+        "epsilon": 0.5,
+        "penalty": "l2",
+        "verbose": 1,
+        "alpha": 0.0002,
+        "n_iter_stop": 10,
+        "random_state": 50,
+        "early_stopping": True,
+        "shuffle": True
+    }
 
-Modelo sgd
+    Modelo sgd
 
-trainDic = {
-    "jobs": -1,
-    "epoch": 500,
-    "tol": 1e-3,
-    "loss": "squared_error",
-    "alpha": 0.0001,
-    "l1": 0.15,
-    "shuffle": True,
-    "lr": "invscaling",
+    trainDic = {
+        "jobs": -1,
+        "epoch": 500,
+        "tol": 1e-3,
+        "loss": "squared_error",
+        "alpha": 0.0001,
+        "l1": 0.15,
+        "shuffle": True,
+        "lr": "invscaling",
 
-}
+    }
 
-Modelo tree
+    Modelo tree
 
-trainDic = {
-    "jobs": -1,
-    "epoch": 500,
-    "tol": 1e-3,
-    "loss": "squared_error",
-    "alpha": 0.0001,
-    "l1": 0.15,
-    "shuffle": True,
-    "lr": "invscaling",
+    trainDic = {
+        "jobs": -1,
+        "epoch": 500,
+        "tol": 1e-3,
+        "loss": "squared_error",
+        "alpha": 0.0001,
+        "l1": 0.15,
+        "shuffle": True,
+        "lr": "invscaling",
 
-}
+    }
 
 ```
 
