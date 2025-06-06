@@ -16,7 +16,7 @@ La intención es facilitar una interfaz amigable al usuario, sin la necesidad de
 
 ## Requisitos
 
-- Python 3.8 o superior  
+- Python 3.11.9 
 - Bibliotecas necesarias (ver `requirements.txt`)  
 - GPU compatible (opcional para entrenamiento acelerado)  
 
