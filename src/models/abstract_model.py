@@ -7,7 +7,7 @@ import pandas as pd
 class Model(ABC):
 
     @abstractmethod
-    def train(self, dataPath:str, trainParams:dict) -> ndarray:
+    def train(self, dataPath:str, trainParams:dict):
         """
         Entrena el modelo con los parámetros dados.
 
@@ -36,7 +36,7 @@ class Model(ABC):
         """
     
     @abstractmethod
-    def predic(self,data) -> any:
+    def predic(self,path) -> ndarray:
         """
         Prueba el modelo con nuevos datos.
         

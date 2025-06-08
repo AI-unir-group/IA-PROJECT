@@ -29,9 +29,9 @@ class SGD(Model):
         self.metric = ""
         os.makedirs(self.path,exist_ok=True)
 
-    def train(self, datapath:str, trainParams:dict):
+    def train(self, dataPath:str, trainParams:dict):
         try:
-           df = pd.read_csv(datapath, parse_dates=True, dayfirst=False, index_col="Date")
+           df = pd.read_csv(dataPath, parse_dates=True, dayfirst=False, index_col="Date")
            df.dropna(inplace=True)
            df[df.columns] = df[df.columns].replace(",", "", regex=True).astype(float)
            col_num = df.drop(columns=[self.objetive], axis=1, errors="ignore").select_dtypes(include=[np.number]).columns
@@ -98,7 +98,7 @@ class SGD(Model):
         self.show_result(self.__model.predict(self.test_df))
 
     
-    def evaluate_model(self, cv, jobs) -> any: 
+    def evaluate_model(self, cv, jobs) -> object: 
         print("[+] Training...")
         try:
             result = cross_validate(self.__model, self.train_df, self.train_df[self.objetive], 
