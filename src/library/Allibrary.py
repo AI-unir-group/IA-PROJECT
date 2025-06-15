@@ -35,4 +35,4 @@ class AImodel:
 
         :param path: Ruta al dataset
         """
-        print(self.__modelAI.predic(path))
+        print(self.__modelAI.predict(path))

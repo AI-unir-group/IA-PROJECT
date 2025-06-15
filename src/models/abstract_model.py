@@ -36,7 +36,7 @@ class Model(ABC):
         """
     
     @abstractmethod
-    def predic(self,path) -> ndarray:
+    def predict(self,path) -> ndarray:
         """
         Prueba el modelo con nuevos datos.
         

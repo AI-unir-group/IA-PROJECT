@@ -5,6 +5,7 @@ from src.helpers.ProcessDataset import ProcessDataset
 
 if __name__ == "__main__":
    ProcessDataset.split_dataset("./dataset/NFLX_dataset.csv")
+   ######################### Ejemplo Tensorflow ################################## 
    model = AImodel("tf")
    trainDic = {
       "metric": "rmse",
@@ -29,3 +30,11 @@ if __name__ == "__main__":
    redy = AImodel("tf")
    redy.load_model("./TF/TF.keras")
    redy.test_model("./dataset/test/NFLX_test.csv")
+
+   #################### Ejemplo SGD ############################
+   model = AImodel("sgd")
+   trainDic = {}
+   model.train_model("./dataset/train/NFLX_train.csv", trainDic)
+   model.test_model("./dataset/test/NFLX_test.csv")
+   model.save_model("SGD") 
+

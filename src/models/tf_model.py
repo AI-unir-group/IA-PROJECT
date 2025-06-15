@@ -5,6 +5,7 @@ from sklearn.exceptions import DataConversionWarning
 from src.models.abstract_model import Model, ColumnExtractor
 import pandas as pd 
 import numpy as np 
+from numpy import ndarray
 import matplotlib.pyplot as plt 
 import matplotlib
 from sklearn.pipeline import Pipeline,FeatureUnion
@@ -158,7 +159,7 @@ class TF(Model):
     
 
     
-    def predic(self, path:str):
+    def predict(self, path:str) -> ndarray:
         try:
             data = pd.read_csv(path, parse_dates=True, dayfirst=False, index_col="Date")
             data.dropna(inplace=True)
